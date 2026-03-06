@@ -1,0 +1,34 @@
+{
+  "name": "@prompeteer/mcp-server",
+  "version": "2.0.0",
+  "description": "Enterprise-grade MCP server for AI prompt engineering. Generate expert-level prompts for 140+ platforms, score quality across 16 dimensions, and manage prompts in PromptDrive.",
+  "mcpName": "io.github.prompeteer/prompeteer-mcp",
+  "homepage": "https://prompeteer.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/prompeteer/prompeteer-mcp"
+  },
+  "author": {
+    "name": "Prompeteer",
+    "email": "info@prompeteer.com",
+    "url": "https://prompeteer.ai"
+  },
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "prompt-engineering",
+    "ai",
+    "prompt-generator",
+    "prompt-scoring",
+    "promptdrive",
+    "chatgpt",
+    "claude",
+    "gemini",
+    "midjourney",
+    "productivity"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}
