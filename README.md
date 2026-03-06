@@ -130,12 +130,7 @@ Use these connection details in your client's MCP settings:
 
 ## Pricing
 
-| Tier | Prompt Generations | Read Tools | Price |
-|------|-------------------|------------|-------|
-| Free | 5/month | Unlimited | $0 |
-| Pro | Unlimited | Unlimited | $50/month |
-
-All read-only tools (`list_prompts`, `get_prompt`, `score_prompt`) are free and unlimited on all tiers.
+See [prompeteer.ai/pricing](https://prompeteer.ai/pricing) for current plans and pricing.
 
 ## Supported Clients
 
