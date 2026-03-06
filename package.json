@@ -1,8 +1,13 @@
 {
   "name": "@prompeteer/mcp-server",
   "version": "2.0.0",
+  "type": "module",
   "description": "Enterprise-grade MCP server for AI prompt engineering. Generate expert-level prompts for 140+ platforms, score quality across 16 dimensions, and manage prompts in PromptDrive.",
   "mcpName": "io.github.prompeteer/prompeteer-mcp",
+  "main": "index.js",
+  "bin": {
+    "prompeteer-mcp": "index.js"
+  },
   "homepage": "https://prompeteer.ai",
   "repository": {
     "type": "git",
@@ -30,5 +35,11 @@
   ],
   "engines": {
     "node": ">=18"
-  }
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE",
+    ".mcp/server.json"
+  ]
 }
