@@ -1,12 +1,12 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.prompeteer/prompeteer-mcp",
-  "description": "Generate expert AI prompts for 140+ platforms with 16-dimension quality scoring.",
+  "description": "Contextual AI platform for outcome-optimized prompts for chatbots, agents, and workflows.",
   "repository": {
     "url": "https://github.com/prompeteer/prompeteer-mcp",
     "source": "github"
   },
-  "version": "2.0.0",
+  "version": "2.0.1",
   "packages": [
     {
       "registryType": "npm",
