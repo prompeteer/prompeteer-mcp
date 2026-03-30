@@ -128,6 +128,10 @@ Use these connection details in your client's MCP settings:
 - **Interactive MCP Apps** — Rich UI components rendered directly in compatible clients
 - **Enterprise Security** — OAuth 2.1 with PKCE, rate limiting, session management, audit logging
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/prompeteer-prompeteer-mcp).
+
 ## Pricing
 
 See [prompeteer.ai/pricing](https://prompeteer.ai/pricing) for current plans and pricing.
