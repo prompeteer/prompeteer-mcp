@@ -1,123 +1,38 @@
 {
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.prompeteer/prompeteer-mcp",
-  "version": "2.0.0",
-  "description": "Generate expert-level AI prompts for 140+ platforms. Score prompts with 16-dimension quality analysis. Save and manage prompts in PromptDrive. Enterprise-grade with OAuth 2.1, rate limiting, and session management.",
+  "title": "Prompeteer",
+  "description": "Contextual prompts and agent skills for 140+ AI platforms.",
   "repository": {
-    "type": "git",
-    "url": "https://github.com/prompeteer/prompeteer-mcp"
+    "url": "https://github.com/prompeteer/prompeteer-mcp",
+    "source": "github"
   },
-  "homepage": "https://prompeteer.ai",
-  "author": {
-    "name": "Prompeteer",
-    "email": "info@prompeteer.com",
-    "url": "https://prompeteer.ai"
-  },
-  "license": "MIT",
-  "keywords": [
-    "mcp",
-    "prompt-engineering",
-    "ai",
-    "prompt-generator",
-    "prompt-scoring",
-    "promptdrive",
-    "chatgpt",
-    "claude",
-    "gemini",
-    "midjourney"
-  ],
-  "remoteServer": {
-    "transportType": "sse",
-    "url": "https://prompeteer.ai/mcp/sse",
-    "streamableHttpUrl": "https://prompeteer.ai/mcp/",
-    "authentication": {
-      "type": "oauth2",
-      "authorizationUrl": "https://prompeteer.ai/oauth/authorize",
-      "tokenUrl": "https://prompeteer.ai/oauth/token",
-      "registrationUrl": "https://prompeteer.ai/oauth/register",
-      "discoveryUrl": "https://prompeteer.ai/mcp/.well-known/oauth-authorization-server",
-      "scopes": ["mcp:read", "mcp:write", "mcp:generate"],
-      "codeChallengeMethodsSupported": ["S256", "plain"]
-    }
-  },
-  "tools": [
+  "websiteUrl": "https://prompeteer.ai/connect",
+  "version": "2.0.3",
+  "remotes": [
     {
-      "name": "generate_prompt",
-      "description": "Generate an optimized AI prompt for any of 140+ platforms",
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "openWorldHint": true
-      }
-    },
-    {
-      "name": "list_prompts",
-      "description": "List prompts from your PromptDrive library with search and filtering",
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "openWorldHint": false
-      }
-    },
-    {
-      "name": "get_prompt",
-      "description": "Get a specific prompt from your PromptDrive library by ID",
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "openWorldHint": false
-      }
-    },
-    {
-      "name": "score_prompt",
-      "description": "Score a prompt across 16 quality dimensions",
-      "annotations": {
-        "readOnlyHint": true,
-        "destructiveHint": false,
-        "openWorldHint": false
-      }
-    },
-    {
-      "name": "save_to_promptdrive",
-      "description": "Save a prompt to your PromptDrive library for later access",
-      "annotations": {
-        "readOnlyHint": false,
-        "destructiveHint": false,
-        "openWorldHint": false
-      }
+      "type": "streamable-http",
+      "url": "https://prompeteer.ai/mcp"
     }
   ],
-  "resources": [
-    {
-      "uri": "ui://prompeteer/prompt-viewer",
-      "name": "Prompt Viewer",
-      "mimeType": "text/html;profile=mcp-app"
-    },
-    {
-      "uri": "ui://prompeteer/score-result",
-      "name": "Score Result",
-      "mimeType": "text/html;profile=mcp-app"
-    },
-    {
-      "uri": "ui://prompeteer/generator-wizard",
-      "name": "Generator Wizard",
-      "mimeType": "text/html;profile=mcp-app"
-    },
-    {
-      "uri": "ui://prompeteer/prompt-list",
-      "name": "Prompt Library",
-      "mimeType": "text/html;profile=mcp-app"
-    },
-    {
-      "uri": "ui://prompeteer/prompt-detail",
-      "name": "Prompt Detail",
-      "mimeType": "text/html;profile=mcp-app"
-    },
-    {
-      "uri": "ui://prompeteer/save-confirmation",
-      "name": "Save Confirmation",
-      "mimeType": "text/html;profile=mcp-app"
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "ai.prompeteer/distribution": {
+        "shortDescription": "Generates contextual prompts and agent skills tuned to 140+ AI platforms, with a 16-dimension Prompt Score and a saved prompt vault. Free to start.",
+        "mediumDescription": "Prompeteer generates contextual prompts and agent skills tuned to the model you are actually using, across 140+ AI platforms and 129 languages. Every prompt gets a 16-dimension Prompt Score, and skills get a Skill Score. Saved prompts live in PromptDrive and roam across platforms. Free to start.",
+        "authentication": "OAuth 2.1 with PKCE S256",
+        "proxy": "mcp-remote@0.8.6"
+      }
     }
-  ],
-  "privacy_policy": "https://prompeteer.ai/privacy",
-  "terms_of_service": "https://prompeteer.ai/terms"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@prompeteer.ai/mcp-server",
+      "version": "2.0.3",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
 }

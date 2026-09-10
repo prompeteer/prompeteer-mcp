@@ -1,72 +1,40 @@
-# Installing Prompeteer MCP Server
+# Installing Prompeteer MCP
 
-Prompeteer is a remote MCP server — no local installation or dependencies required.
+Generates contextual prompts and agent skills tuned to 140+ AI platforms, with a 16-dimension Prompt Score and a saved prompt vault. Free to start.
 
-## Quick Setup
+Connect to `https://prompeteer.ai/mcp` using Streamable HTTP and OAuth 2.1 with PKCE S256. Complete sign-in in your MCP client's browser flow.
 
-**Server URL (SSE):** `https://prompeteer.ai/mcp/sse`
-**Server URL (Streamable HTTP):** `https://prompeteer.ai/mcp`
-**Authentication:** OAuth 2.1 (automatic login redirect)
+For Cursor, add this to `.cursor/mcp.json`:
 
-Add the server URL to your MCP client. You'll be redirected to sign in with your Prompeteer account.
-
-## Available Tools
-
-| Tool | Description | Type |
-|------|-------------|------|
-| `generate_prompt` | Generate expert-level AI prompts for 140+ platforms | Write |
-| `list_prompts` | Browse your PromptDrive library with search and filtering | Read |
-| `get_prompt` | Retrieve a specific saved prompt by ID | Read |
-| `score_prompt` | Analyze prompt quality across 16 dimensions | Read |
-| `save_to_promptdrive` | Save prompts to your PromptDrive library | Write |
-
-## Client Configuration
-
-### Claude Desktop
 ```json
 {
   "mcpServers": {
     "prompeteer": {
-      "url": "https://prompeteer.ai/mcp/sse",
-      "transport": "sse"
+      "url": "https://prompeteer.ai/mcp"
     }
   }
 }
 ```
 
-### Cursor
+For other clients, follow the [connection guide](https://prompeteer.ai/connect). Do not assume all MCP clients accept the same configuration format.
+
+For clients that launch stdio servers, use Node.js 22.14.0 or later and configure:
+
 ```json
 {
-  "servers": {
+  "mcpServers": {
     "prompeteer": {
-      "type": "sse",
-      "url": "https://prompeteer.ai/mcp/sse"
+      "command": "npx",
+      "args": ["-y", "@prompeteer.ai/mcp-server@2.0.3"]
     }
   }
 }
 ```
 
-### VS Code / GitHub Copilot
-```json
-{
-  "servers": {
-    "prompeteer": {
-      "type": "sse",
-      "url": "https://prompeteer.ai/mcp/sse"
-    }
-  }
-}
-```
+The package runs a maintained `mcp-remote` proxy to the fixed Prompeteer endpoint and opens browser OAuth when required. Credentials are handled by that proxy's local cache. Prompeteer's generation service remains hosted. `--help`, `--version`, and `--json` print information without connecting; `--json` prints the direct Cursor configuration above.
 
-## Pricing
+The hosted service provides prompt generation, agent skill generation, Prompt Score, PromptDrive, and authenticated private Memory tools. Skills receive a Skill Score through the skill workflow. Use authenticated tool discovery for the current schemas and authorized operations.
 
-- **Free:** 5 prompt generations/month
-- **Pro ($50/mo):** Unlimited generations
-- All read-only tools are free and unlimited
+Free to start. See [current pricing and allowances](https://prompeteer.ai/pricing); this file does not promise unlimited use.
 
-## Links
-
-- Website: https://prompeteer.ai
-- Privacy Policy: https://prompeteer.ai/privacy
-- Terms of Service: https://prompeteer.ai/terms
-- Support: info@prompeteer.com
+[Privacy](https://prompeteer.ai/privacy) | [Terms](https://prompeteer.ai/terms) | [Support](https://prompeteer.ai/about)

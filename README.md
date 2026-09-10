@@ -1,162 +1,139 @@
 # Prompeteer MCP Server
 
-**Enterprise-grade MCP server for AI prompt engineering.** Generate expert-level prompts for 140+ AI platforms, score prompt quality across 16 dimensions, and manage your prompts in PromptDrive.
+Contextual prompts and agent skills for 140+ AI platforms.
 
-[![Website](https://img.shields.io/badge/Website-prompeteer.ai-E05432)](https://prompeteer.ai)
-[![MCP](https://img.shields.io/badge/MCP-Compatible-blue)](https://modelcontextprotocol.io)
-[![Transport](https://img.shields.io/badge/Transport-SSE%20%2B%20Streamable%20HTTP-green)](https://prompeteer.ai/mcp)
-[![Auth](https://img.shields.io/badge/Auth-OAuth%202.1-purple)](https://prompeteer.ai/oauth/authorize)
+Prompeteer generates contextual prompts and agent skills tuned to the model you are actually using, across 140+ AI platforms and 129 languages. Every prompt gets a 16-dimension Prompt Score, and skills get a Skill Score. Saved prompts live in PromptDrive and roam across platforms. Free to start.
 
----
+## Connect to the hosted server
 
-## Tools
+| Setting | Value |
+| --- | --- |
+| Endpoint | `https://prompeteer.ai/mcp` |
+| Transport | Streamable HTTP |
+| Authentication | OAuth 2.1 with PKCE S256 |
+| Connection guide | [prompeteer.ai/connect](https://prompeteer.ai/connect) |
 
-| Tool | Description | Type |
-|------|-------------|------|
-| `generate_prompt` | Generate an optimized AI prompt for any of 140+ platforms | Write |
-| `list_prompts` | Browse your PromptDrive library with search and filtering | Read |
-| `get_prompt` | Retrieve a specific saved prompt by ID | Read |
-| `score_prompt` | Analyze prompt quality across 16 dimensions | Read |
-| `save_to_promptdrive` | Save a prompt to your PromptDrive library | Write |
+Use a client that supports remote MCP and OAuth discovery. Add the endpoint in its remote-server settings and complete the browser sign-in. Access depends on the account, plan, consented scopes, and client support.
 
-## Quick Setup
-
-### Claude Desktop
-
-Add to your `claude_desktop_config.json` (Settings > Developer > Edit Config):
+For Cursor, add this entry to `.cursor/mcp.json`:
 
 ```json
 {
   "mcpServers": {
     "prompeteer": {
-      "url": "https://prompeteer.ai/mcp/sse",
-      "transport": "sse"
+      "url": "https://prompeteer.ai/mcp"
     }
   }
 }
 ```
 
-### Claude.ai (Web)
+Other clients have their own configuration formats. Use the [connection guide](https://prompeteer.ai/connect) for client-specific setup.
 
-1. Open [Claude.ai](https://claude.ai)
-2. Go to **Settings > Connectors > Manage Connectors**
-3. Click **Add custom server**
-4. Enter URL: `https://prompeteer.ai/mcp`
-5. Complete OAuth login
+## Connect through the npm stdio bridge
 
-### ChatGPT
-
-1. Open **ChatGPT Settings > Developer Mode**
-2. Click **Add App**
-3. Enter URL: `https://prompeteer.ai/mcp`
-4. Complete OAuth login
-
-### Cursor
-
-Add to `.cursor/mcp.json`:
-
-```json
-{
-  "servers": {
-    "prompeteer": {
-      "type": "sse",
-      "url": "https://prompeteer.ai/mcp/sse"
-    }
-  }
-}
-```
-
-### VS Code / GitHub Copilot
-
-Add to `.vscode/mcp.json`:
-
-```json
-{
-  "servers": {
-    "prompeteer": {
-      "type": "sse",
-      "url": "https://prompeteer.ai/mcp/sse"
-    }
-  }
-}
-```
-
-### Windsurf
-
-Add to `~/.codeium/windsurf/mcp_config.json`:
+For clients that launch local MCP commands, use Node.js 22.14.0 or later and add:
 
 ```json
 {
   "mcpServers": {
     "prompeteer": {
-      "serverUrl": "https://prompeteer.ai/mcp/sse",
-      "transport": "sse"
+      "command": "npx",
+      "args": ["-y", "@prompeteer.ai/mcp-server@2.0.3"]
     }
   }
 }
 ```
 
-### Cline / Continue / Other MCP Clients
+The command runs a stdio bridge to the same hosted Prompeteer endpoint. It uses the pinned `mcp-remote` 0.8.6 proxy for Streamable HTTP and OAuth. The client opens a browser for sign-in when authorization is needed. The local bridge does not run Prompeteer's generation models or product service.
 
-Use these connection details in your client's MCP settings:
+The endpoint and OAuth resource are fixed to `https://prompeteer.ai/mcp`. The wrapper uses a loopback OAuth callback, runs without a shell, and forwards MCP messages through stdout. Connection diagnostics use stderr. It does not accept arbitrary endpoints, authentication headers, or debug flags. Native remote clients can use the direct URL without installing the bridge.
 
-- **Server URL (SSE):** `https://prompeteer.ai/mcp/sse`
-- **Server URL (Streamable HTTP):** `https://prompeteer.ai/mcp`
-- **Authentication:** OAuth 2.1 (automatic redirect)
+```sh
+npx @prompeteer.ai/mcp-server@2.0.3
+npx @prompeteer.ai/mcp-server@2.0.3 --help
+npx @prompeteer.ai/mcp-server@2.0.3 --json
+npx @prompeteer.ai/mcp-server@2.0.3 --version
+```
 
-## Server Details
+`--json` prints the direct remote configuration for Cursor. `--help` and `--version` do not start a connection.
 
-| Property | Value |
-|----------|-------|
-| **Endpoint (SSE)** | `https://prompeteer.ai/mcp/sse` |
-| **Endpoint (Streamable HTTP)** | `https://prompeteer.ai/mcp` |
-| **Authentication** | OAuth 2.1 with PKCE |
-| **Authorization URL** | `https://prompeteer.ai/oauth/authorize` |
-| **Token URL** | `https://prompeteer.ai/oauth/token` |
-| **Discovery** | `https://prompeteer.ai/mcp/.well-known/oauth-authorization-server` |
-| **Scopes** | `mcp:read`, `mcp:write`, `mcp:generate` |
-| **Rate Limit** | 120 requests/minute |
-| **Session Limit** | 20 per user |
+OAuth credentials are managed by `mcp-remote`, using its local `~/.mcp-auth` cache by default. On POSIX systems, new credential files are written with mode 0600. The bridge does not add its own token store. The package includes the tested proxy runtime and the patched query parser used by its callback server. Client installation does not resolve a different proxy dependency tree.
 
-## Features
+## Capabilities
 
-- **140+ Platform Support** — Optimized prompt generation for ChatGPT, Claude, Gemini, Midjourney, DALL-E, Stable Diffusion, Suno, and 130+ more
-- **16-Dimension Quality Scoring** — Linguistic quality, structural integrity, information density, platform optimization
-- **PromptDrive** — Personal prompt library with search, categorization, and auto-tagging
-- **Multi-Modal** — Text, image, video, audio, and code prompt generation
-- **Multi-Lingual** — 45+ language support
-- **Interactive MCP Apps** — Rich UI components rendered directly in compatible clients
-- **Enterprise Security** — OAuth 2.1 with PKCE, rate limiting, session management, audit logging
+| Tool family | Examples |
+| --- | --- |
+| Prompt and skill generation | `generate_prompt`, `generate_skill` |
+| Prompt Score | `score_prompt` |
+| PromptDrive | `list_prompts`, `get_prompt`, `save_to_promptdrive` |
+| Private Memory | `list_memory_sources`, `search_memory`, `get_memory_page`, `ask_memory`, `get_memory_settings`, `update_memory_settings` |
 
-## Pricing
+Skills receive a Skill Score as part of the skill workflow; `score_skill` is not a separate advertised MCP tool. Discover the current tool schemas through the authenticated server. Generation, scoring, writes, and private Memory operations may require additional scopes or consume plan allowances.
 
-See [prompeteer.ai/pricing](https://prompeteer.ai/pricing) for current plans and pricing.
+Example: “Generate a prompt for a product launch email in Claude. Show its Prompt Score, then save the approved version to PromptDrive.”
 
-## Supported Clients
+## Authentication
 
-Works with any MCP-compatible client including:
+The server advertises OAuth metadata and requests the scopes needed for authorized work. Keep credentials in the MCP client's managed authentication flow.
 
-- Claude Desktop / Claude.ai / Claude Code
-- ChatGPT (Developer Mode + Custom GPTs)
-- Cursor
-- VS Code / GitHub Copilot
-- Windsurf
-- Cline
-- Continue
-- Zed
-- goose (Block)
-- Amazon Q CLI
-- LM Studio
-- LobeChat
+| Scope | Purpose |
+| --- | --- |
+| `mcp:read` | Read prompts and vault metadata |
+| `mcp:write` | Save prompts |
+| `mcp:generate` | Generate prompts and skills |
+| `memory:read` | Read private Memory |
+| `memory:write` | Update Memory settings |
 
-## Links
+[OAuth metadata](https://prompeteer.ai/mcp/.well-known/oauth-authorization-server) and [protected resource metadata](https://prompeteer.ai/.well-known/oauth-protected-resource/mcp) are publicly discoverable. An unauthenticated MCP request returns HTTP 401 until you sign in.
 
-- **Website:** [prompeteer.ai](https://prompeteer.ai)
-- **MCP Documentation:** [prompeteer.ai/mcp](https://prompeteer.ai/mcp)
-- **Privacy Policy:** [prompeteer.ai/privacy](https://prompeteer.ai/privacy)
-- **Terms of Service:** [prompeteer.ai/terms](https://prompeteer.ai/terms)
-- **Support:** info@prompeteer.com
+## Pricing and public facts
 
-## License
+Free to start. See [current plans and allowances](https://prompeteer.ai/pricing).
 
-MIT — This repository contains connection configuration and documentation only. The Prompeteer platform is proprietary.
+Prompeteer reports 12,000+ users across 160 countries and supports 129 languages. These company facts were approved for publication in September 2026.
+
+## Registry and source
+
+The [official MCP registry](https://registry.modelcontextprotocol.io/?q=prompeteer) lists the server as `io.github.prompeteer/prompeteer-mcp`. This is separate from first-party connector directories.
+
+`server.json` describes both the npm stdio bridge and the hosted Streamable HTTP endpoint. Its registry description uses the canonical tagline because the registry limits descriptions to 100 characters. The full description is preserved in publisher metadata. `.mcp/server.json` is an identical compatibility copy.
+
+Version 2.0.3 adds a working stdio bridge and corrects stale setup instructions. Earlier npm 2.0.0 printed setup instructions and exited, even though registry versions 2.0.0 through 2.0.2 advertised it as a stdio transport. The hosted endpoint remains `https://prompeteer.ai/mcp`.
+
+## Repository manifests for Cursor and Gemini CLI
+
+`plugin.json` and `mcp.json` provide the portable Agent Plugins format supported by Cursor. After installing the plugin through Cursor, connect Prompeteer and complete browser sign-in. The direct Cursor configuration above also works as a manual setup format. Generated skills are returned as content; connecting does not run or install a generated skill.
+
+`gemini-extension.json` provides a Gemini CLI extension using the hosted HTTP endpoint and OAuth discovery. Once the manifest is available in the public repository, install with:
+
+```sh
+gemini extensions install https://github.com/prompeteer/prompeteer-mcp
+```
+
+Restart Gemini CLI and complete the Prompeteer connection when prompted. Generation and scoring can consume account quota; requested saves write to your PromptDrive.
+
+These manifests have been structurally validated. Installation and OAuth in the actual Cursor and Gemini CLI applications have not been tested for this release. Their presence does not establish a marketplace listing or platform approval. See the [Cursor plugin documentation](https://cursor.com/docs/plugins) and [Gemini extension reference](https://geminicli.com/docs/extensions/reference/).
+
+## Build and verify from source
+
+Use Node.js 22.14.0 or later. The source lock pins the maintained proxy and its dependencies. Build copies those unmodified runtime files, with their licenses, into the release package.
+
+```sh
+npm ci --ignore-scripts
+npm run build
+npm run check
+npm test
+npm audit
+npm pack --dry-run --json --ignore-scripts
+```
+
+The explicit build uses `mcp-remote` 0.8.6 and patched `qs` 6.16.0. Tests run protocol forwarding and startup-disconnect checks against local fixtures; they do not generate prompts or make paid service calls. The `vendor/` build output is included in npm releases and is not committed to this repository.
+
+## Support and license
+
+- [Connection guide](https://prompeteer.ai/connect)
+- [Privacy policy](https://prompeteer.ai/privacy)
+- [Terms of service](https://prompeteer.ai/terms)
+- [Issues](https://github.com/prompeteer/prompeteer-mcp/issues)
+
+The bridge wrapper and documentation in this repository are MIT licensed. The hosted Prompeteer platform is proprietary.
