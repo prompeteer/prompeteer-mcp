@@ -114,6 +114,29 @@ Restart Gemini CLI and complete the Prompeteer connection when prompted. Generat
 
 These manifests have been structurally validated. Installation and OAuth in the actual Cursor and Gemini CLI applications have not been tested for this release. Their presence does not establish a marketplace listing or platform approval. See the [Cursor plugin documentation](https://cursor.com/docs/plugins) and [Gemini extension reference](https://geminicli.com/docs/extensions/reference/).
 
+## Plugin source for Claude Code, Cowork and Grok Build
+
+`.claude-plugin/plugin.json` supplies plugin metadata and `.mcp.json` connects the client directly to `https://prompeteer.ai/mcp` over HTTP. This plugin contains one remote MCP connection. It adds no local command, hook, skill, agent, or shell execution. It does not start the npm bridge or install its runtime dependencies.
+
+For a local Claude Code check after cloning this repository:
+
+```sh
+claude plugin validate .
+claude --plugin-dir .
+```
+
+Use `/mcp` in Claude Code to complete the Prompeteer OAuth connection. For Grok Build, the repository can be installed through a marketplace entry that pins its exact public commit. Marketplace submission, listing, and functional client testing are separate outcomes; these source files alone do not establish any of them.
+
+### Network access and account permissions
+
+The client contacts `https://prompeteer.ai/mcp` and Prompeteer's OAuth discovery, registration, authorization and token endpoints on `https://prompeteer.ai`. Prompeteer sign-in may redirect to the identity provider selected by the user. Credentials remain in the client's supported OAuth flow; the plugin contains no tokens, API keys or environment-variable readers.
+
+A Prompeteer account is required. Tool availability depends on the authenticated account, approved scopes and plan allowances. PromptDrive tools read or save account records; Memory tools access the user's Prompeteer Memory when enabled and authorized. Memory refers to Prompeteer's stored sources, not the host assistant's memory or conversation history. Generation and scoring can consume quota, and generation may save its result to PromptDrive as part of the service workflow. The actual returned `savedToVault` and `promptId` fields indicate persistence. Generated skills are returned as content; this plugin does not execute them.
+
+### Privacy policy
+
+Tool inputs and any requested saved-content or Memory results are processed by the Prompeteer service and returned to the connected client. Prompeteer's backend may use AI providers to carry out generation or scoring. See the published [privacy policy](https://prompeteer.ai/privacy) for service data practices, [terms](https://prompeteer.ai/terms), and [plans](https://prompeteer.ai/pricing). Contact [info@prompeteer.com](mailto:info@prompeteer.com) for support or privacy questions. Disconnect the MCP connection in the client when it is no longer needed.
+
 ## Build and verify from source
 
 Use Node.js 22.14.0 or later. The source lock pins the maintained proxy and its dependencies. Build copies those unmodified runtime files, with their licenses, into the release package.
