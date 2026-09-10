@@ -1,30 +1,38 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.prompeteer/prompeteer-mcp",
-  "description": "Generate A+ prompts for ChatGPT, Claude, Midjourney — built for agents & workflows.",
+  "title": "Prompeteer",
+  "description": "Contextual prompts and agent skills for 140+ AI platforms.",
   "repository": {
     "url": "https://github.com/prompeteer/prompeteer-mcp",
     "source": "github"
   },
-  "version": "2.0.2",
+  "websiteUrl": "https://prompeteer.ai/connect",
+  "version": "2.0.3",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://prompeteer.ai/mcp"
+    }
+  ],
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "ai.prompeteer/distribution": {
+        "shortDescription": "Generates contextual prompts and agent skills tuned to 140+ AI platforms, with a 16-dimension Prompt Score and a saved prompt vault. Free to start.",
+        "mediumDescription": "Prompeteer generates contextual prompts and agent skills tuned to the model you are actually using, across 140+ AI platforms and 129 languages. Every prompt gets a 16-dimension Prompt Score, and skills get a Skill Score. Saved prompts live in PromptDrive and roam across platforms. Free to start.",
+        "authentication": "OAuth 2.1 with PKCE S256",
+        "proxy": "mcp-remote@0.8.6"
+      }
+    }
+  },
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@prompeteer.ai/mcp-server",
-      "version": "2.0.0",
+      "version": "2.0.3",
       "transport": {
         "type": "stdio"
       }
-    }
-  ],
-  "remoteEndpoints": [
-    {
-      "transportType": "sse",
-      "url": "https://prompeteer.ai/mcp/sse"
-    },
-    {
-      "transportType": "streamable-http",
-      "url": "https://prompeteer.ai/mcp"
     }
   ]
 }

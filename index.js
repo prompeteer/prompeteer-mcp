@@ -1,50 +1,53 @@
 #!/usr/bin/env node
 
-/**
- * Prompeteer MCP Server — Remote Connector
- *
- * This package connects MCP clients to the Prompeteer remote server.
- * No local installation needed — all processing happens at https://prompeteer.ai/mcp
- *
- * Usage:
- *   npx @prompeteer/mcp-server
- *
- * Or add to your MCP client config:
- *   Server URL (SSE): https://prompeteer.ai/mcp/sse
- *   Server URL (Streamable HTTP): https://prompeteer.ai/mcp
- *   Authentication: OAuth 2.1
- */
+import { readFileSync } from 'node:fs';
+import { MCP_ENDPOINT, runBridge } from './bridge.js';
 
-const SERVER_URL_SSE = "https://prompeteer.ai/mcp/sse";
-const SERVER_URL_HTTP = "https://prompeteer.ai/mcp";
-const DOCS_URL = "https://github.com/prompeteer/prompeteer-mcp";
+const { version, description } = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8'));
+const remoteConfig = { mcpServers: { prompeteer: { url: MCP_ENDPOINT } } };
+const args = process.argv.slice(2);
 
-console.log(`
-╔══════════════════════════════════════════════════════════════╗
-║                    Prompeteer MCP Server                     ║
-║          AI Prompt Engineering for 140+ Platforms             ║
-╠══════════════════════════════════════════════════════════════╣
-║                                                              ║
-║  Prompeteer is a remote MCP server — no local server needed. ║
-║                                                              ║
-║  Add one of these URLs to your MCP client:                   ║
-║                                                              ║
-║  SSE:              ${SERVER_URL_SSE}            ║
-║  Streamable HTTP:  ${SERVER_URL_HTTP}                ║
-║                                                              ║
-║  Authentication:   OAuth 2.1 (automatic redirect)            ║
-║                                                              ║
-║  Tools:                                                      ║
-║    • generate_prompt    — Generate prompts for 140+ platforms ║
-║    • score_prompt       — 16-dimension quality analysis       ║
-║    • list_prompts       — Browse your PromptDrive library     ║
-║    • get_prompt         — Retrieve a saved prompt             ║
-║    • save_to_promptdrive — Save to PromptDrive                ║
-║                                                              ║
-║  Docs: ${DOCS_URL}            ║
-║  Site: https://prompeteer.ai                                 ║
-║                                                              ║
-╚══════════════════════════════════════════════════════════════╝
+if (args.length === 1 && args[0] === '--version') {
+  console.log(version);
+} else if (args.length === 1 && args[0] === '--json') {
+  console.log(JSON.stringify(remoteConfig, null, 2));
+} else if (args.length === 1 && ['--help', '-h'].includes(args[0])) {
+  console.log(`Prompeteer MCP (${version})
+
+${description}
+
+With no arguments, this command runs an MCP stdio bridge to ${MCP_ENDPOINT}.
+OAuth sign-in opens in your browser when required. The maintained mcp-remote
+proxy handles authentication and keeps credentials in its local protected cache.
+All MCP messages use stdout. Sign-in and connection diagnostics use stderr.
+
+Clients with native remote support can connect directly using Streamable HTTP:
+${JSON.stringify(remoteConfig, null, 2)}
+
+Usage:
+  npx @prompeteer.ai/mcp-server
+  npx @prompeteer.ai/mcp-server --help
+  npx @prompeteer.ai/mcp-server --json
+  npx @prompeteer.ai/mcp-server --version
+
+Requires Node.js 22.14.0 or later.
+Connection guide: https://prompeteer.ai/connect
+Current plans: https://prompeteer.ai/pricing
 `);
-
-process.exit(0);
+} else if (args.length !== 0) {
+  console.error('Unknown arguments. Run prompeteer-mcp --help for connection instructions.');
+  process.exitCode = 1;
+} else {
+  const [major, minor] = process.versions.node.split('.').map(Number);
+  if (major < 22 || (major === 22 && minor < 14)) {
+    console.error('Prompeteer MCP requires Node.js 22.14.0 or later.');
+    process.exitCode = 1;
+  } else {
+    try {
+      runBridge();
+    } catch {
+      console.error('Prompeteer could not load its reviewed MCP proxy. Reinstall this package.');
+      process.exitCode = 1;
+    }
+  }
+}

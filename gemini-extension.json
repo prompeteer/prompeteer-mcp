@@ -1,0 +1,13 @@
+{
+  "name": "prompeteer",
+  "version": "2.0.3",
+  "description": "Generates contextual prompts and agent skills tuned to 140+ AI platforms, with a 16-dimension Prompt Score and a saved prompt vault. Free to start.",
+  "mcpServers": {
+    "prompeteer": {
+      "httpUrl": "https://prompeteer.ai/mcp",
+      "oauth": {
+        "enabled": true
+      }
+    }
+  }
+}
